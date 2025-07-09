@@ -4,15 +4,15 @@ function CheckAuth({ children, protectedRoute }) {
     const navigate = useNavigate();
     const [loading,setLoading]=useState(true)
     useEffect(()=>{
-      const token=localStorage.getItem("token")
+      const user=localStorage.getItem("user")
       if(protectedRoute){
-        if(!token){
+        if(!user){
           navigate("/login")
         }else{
           setLoading(false)
         }
       }else{
-        if(token){
+        if(user){
           navigate("/")
         }else{
           setLoading(false)

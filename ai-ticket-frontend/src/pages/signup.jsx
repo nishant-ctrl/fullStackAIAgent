@@ -12,16 +12,13 @@ function Signup() {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await apiClient.post("/auth/signup", form);
+            const response = await apiClient.post("/auth/signup", form,{withCredentials:true});
             if (response.status === 201) {
                 localStorage.setItem(
-                    "token",
-                    JSON.stringify(response.data.token)
-                );
-                localStorage.setItem(
                     "user",
-                    JSON.stringify(response.data.user)
+                    JSON.stringify(response.data.data)
                 );
+
                 navigate("/");
             } else {
                 alert("Signup failed");

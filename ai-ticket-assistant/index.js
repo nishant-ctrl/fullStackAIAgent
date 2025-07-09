@@ -8,13 +8,19 @@ import ticketRoutes from "./routes/ticket.route.js";
 import { inngest } from "./inngest/client.js";
 import { onUserSignup } from "./inngest/functions/on-signup.js";
 import { onTicketCreated } from "./inngest/functions/on-ticket-create.js";
+import { errorHandler } from "./middleware/error.middleware.js";
 dotenv.config({
     path: "./.env",
 });
 
 const port = process.env.PORT || 5001;
 const app = express();
-app.use(cors());
+app.use(
+    cors({
+        origin: process.env.CORS_ORIGIN,
+        credentials: true,
+    })
+);
 app.use(express.json());
 app.use("/api/auth", userRoutes);
 app.use("/api/tickets", ticketRoutes);
@@ -26,6 +32,7 @@ app.use(
         functions: [onUserSignup, onTicketCreated],
     })
 );
+app.use(errorHandler)
 
 await mongoose
     .connect(process.env.MONGO_URI)
