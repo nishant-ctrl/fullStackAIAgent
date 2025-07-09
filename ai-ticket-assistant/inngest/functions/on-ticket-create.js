@@ -1,7 +1,7 @@
-import { inngest } from "../client";
+import { inngest } from "../client.js";
 import { Ticket } from "../../models/ticket.model.js";
 import { NonRetriableError } from "inngest";
-import { sendMail } from "../../utils/mailer";
+import { sendMail } from "../../utils/mailer.js";
 import analyzeTicket from "../../utils/ai.js";
 import { User } from "../../models/user.model.js";
 

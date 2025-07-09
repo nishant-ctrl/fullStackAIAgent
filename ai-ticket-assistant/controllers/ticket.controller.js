@@ -71,7 +71,7 @@ export const getTicket = async (req, res) => {
             if (!ticket) {
                 return res.status(404).json({ message: "Ticket not found" });
             }
-            return res.status(404).json({ ticket });
+            return res.status(200).json({ ticket });
         }
     } catch (error) {
         console.error("Error fetching ticket", error.message);
