@@ -1,77 +1,77 @@
-import React from 'react'
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiClient } from "../utils/api-client.js";
+import { useAppStore } from "../store/index.js";
 function Login() {
-   const [form, setForm] = useState({ email: "", password: "" });
-      const [loading, setLoading] = useState(false);
-      const navigate = useNavigate();
-      const handleChange = (e) => {
-          setForm({ ...form, [e.target.name]: e.target.value });
-      };
-      const handleLogin = async (e) => {
-          e.preventDefault();
-          setLoading(true);
-          try {
-              const response = await apiClient.post("/auth/login", form);
-              if (response.status === 201) {
-                  localStorage.setItem(
-                      "token",
-                      JSON.stringify(response.data.token)
-                  );
-                  localStorage.setItem(
-                      "user",
-                      JSON.stringify(response.data.user)
-                  );
-                  navigate("/");
-              } else {
-                  alert("Login failed");
-              }
-          } catch (error) {
-              alert("Login went wrong");
-          } finally {
-              setLoading(false);
-          }
-      };
+    const [form, setForm] = useState({ email: "", password: "" });
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const { userInfo, setUserInfo } = useAppStore();
 
-      return (
-          <div className="min-h-screen flex items-center justify-center bg-base-200">
-              <div className="card w-full max-w-sm shadow-xl bg-base-100">
-                  <form onSubmit={handleLogin} className="card-body">
-                      <h2 className="card-title justify-center">Login</h2>
 
-                      <input
-                          type="email"
-                          name="email"
-                          placeholder="Email"
-                          className="input input-bordered"
-                          value={form.email}
-                          onChange={handleChange}
-                          required
-                      />
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const response = await apiClient.post("/auth/login", form, {
+                withCredentials: true,
+            });
+            if (response.status === 200 && response.data.data) {
+                setUserInfo(response.data.data);
+                navigate("/");
+            } else {
+                alert("Login failed");
+            }
+        } catch (error) {
+            alert("Login went wrong");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-                      <input
-                          type="password"
-                          name="password"
-                          placeholder="Password"
-                          className="input input-bordered"
-                          value={form.password}
-                          onChange={handleChange}
-                          required
-                      />
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-base-200">
+            <div className="card w-full max-w-sm shadow-xl bg-base-100">
+                <form onSubmit={handleLogin} className="card-body">
+                    <h2 className="card-title justify-center">Login</h2>
 
-                      <div className="form-control mt-4">
-                          <button
-                              type="submit"
-                              className="btn btn-primary w-full"
-                              disabled={loading}
-                          >
-                              {loading ? "Logging in..." : "Login"}
-                          </button>
-                      </div>
-                  </form>
-              </div>
-          </div>
-      );
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        className="input input-bordered"
+                        value={form.email}
+                        onChange={handleChange}
+                        required
+                    />
+
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        className="input input-bordered"
+                        value={form.password}
+                        onChange={handleChange}
+                        required
+                    />
+
+                    <div className="form-control mt-4">
+                        <button
+                            type="submit"
+                            className="btn btn-primary w-full"
+                            disabled={loading}
+                        >
+                            {loading ? "Logging in..." : "Login"}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    );
 }
 
-export default Login
+export default Login;

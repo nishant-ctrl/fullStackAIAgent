@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiClient } from "../utils/api-client.js";
+import { useAppStore } from "../store/index.js";
 function Signup() {
     const [form, setForm] = useState({ email: "", password: "" });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { userInfo, setUserInfo } = useAppStore();
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
@@ -12,13 +14,11 @@ function Signup() {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await apiClient.post("/auth/signup", form,{withCredentials:true});
-            if (response.status === 201) {
-                localStorage.setItem(
-                    "user",
-                    JSON.stringify(response.data.data)
-                );
-
+            const response = await apiClient.post("/auth/signup", form, {
+                withCredentials: true,
+            });
+            if (response.status === 201 && response.data.data) {
+                setUserInfo(response.data.data);
                 navigate("/");
             } else {
                 alert("Signup failed");

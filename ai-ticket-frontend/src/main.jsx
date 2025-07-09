@@ -9,7 +9,7 @@ import Signup from "./pages/signup.jsx";
 import Admin from "./pages/admin.jsx";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 createRoot(document.getElementById("root")).render(
-    <StrictMode>
+    
         <BrowserRouter>
             <Routes>
                 <Route
@@ -54,5 +54,5 @@ createRoot(document.getElementById("root")).render(
                 />
             </Routes>
         </BrowserRouter>
-    </StrictMode>
+
 );
