@@ -11,14 +11,15 @@ export const signup = async (req, res) => {
             return res
                 .status(400)
                 .json({ error: "User with this email already exists" });
-        const hashedPassword = bcrypt(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
         const user = await User.create({
             email,
             password: hashedPassword,
             skills,
         });
+        console.log("REACHED");
 
-        await inngest.send({
+        inngest.send({
             name: "user/signup",
             data: {
                 email,
@@ -108,12 +109,13 @@ export const updateUser = async (req, res) => {
     }
 };
 
-export const getUsers = async (req,res) => {
+export const getUsers = async (req, res) => {
     try {
-        if(req.user.role!== "admin") return res.status(403).json({ error: "Forbidden" });
-        const users = await User.find().select("-password")
+        if (req.user.role !== "admin")
+            return res.status(403).json({ error: "Forbidden" });
+        const users = await User.find().select("-password");
         return res.status(200).json(users);
     } catch (error) {
-        return res.status(501).json({ error: "Error while getting users" });    
+        return res.status(501).json({ error: "Error while getting users" });
     }
-}
+};
