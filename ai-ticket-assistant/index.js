@@ -9,6 +9,7 @@ import { inngest } from "./inngest/client.js";
 import { onUserSignup } from "./inngest/functions/on-signup.js";
 import { onTicketCreated } from "./inngest/functions/on-ticket-create.js";
 import { errorHandler } from "./middleware/error.middleware.js";
+import cookieParser from "cookie-parser";
 dotenv.config({
     path: "./.env",
 });
@@ -22,6 +23,7 @@ app.use(
     })
 );
 app.use(express.json());
+app.use(cookieParser());
 app.use("/api/auth", userRoutes);
 app.use("/api/tickets", ticketRoutes);
 
