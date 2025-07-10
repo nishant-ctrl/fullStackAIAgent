@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 import { useAppStore } from "./store";
 import { apiClient } from "./utils/api-client";
 import {GET_CURRENT_USER} from "./utils/constants"
+import Navbar from "./pages/components/navbar";
 function App() {
     const { userInfo, setUserInfo } = useAppStore();
     const [loading, setLoading] = useState(true);
@@ -30,7 +31,12 @@ function App() {
     }, [setUserInfo]);
 
     if (loading) return <div>Loading...</div>;
-    return <Outlet />;
+    return (
+        <>
+            <Navbar />
+            <Outlet />
+        </>
+    );
 }
 
 export default App;
