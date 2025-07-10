@@ -48,7 +48,8 @@ Ticket information:
 - Title: ${ticket.title}
 - Description: ${ticket.description}`);
 
-    const raw = response.output[0].context;
+    const raw = response.output[0].content;
+    // console.log("RAW:  ",raw)
     try {
         const match = raw.match(/```json\s*([\s\S]*?)\s*```/i);
         const jsonString = match ? match[1] : raw.trim();

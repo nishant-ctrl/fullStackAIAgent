@@ -14,7 +14,7 @@ export const createTicket = asyncHandler(async (req, res) => {
         description,
         createdBy: req.user._id.toString(),
     });
-    await inngest.send({
+    inngest.send({
         name: "ticket/created",
         data: {
             ticketId: newTicket._id.toString(),
@@ -53,6 +53,7 @@ export const getTickets = asyncHandler(async (req, res) => {
 
 export const getTicket = asyncHandler(async (req, res) => {
     const user = req.user;
+    // console.log(req.params.id);
     let ticket;
     if (user.role !== "user") {
         ticket = await Ticket.findById(req.params.id).populate("assignedTo", [
@@ -60,16 +61,16 @@ export const getTicket = asyncHandler(async (req, res) => {
             "_id",
         ]);
     } else {
-        ticket = Ticket.findOne({
+        console.log("REACHED");
+        ticket = await Ticket.findOne({
             createdBy: user._id,
             _id: req.params.id,
-        }).select("title description status createdAt");
-
-        if (!ticket) {
-            return res.status(404).json({ message: "Ticket not found" });
-        }
-        return res
-            .status(200)
-            .json(new ApiResponse(200, ticket, "Fetched ticket"));
+        }).populate("assignedTo", ["email", "_id"]);
     }
+    if (!ticket) {
+        return res
+            .status(404)
+            .json(new ApiResponse(404, {}, "Ticket not found"));
+    }
+    return res.status(200).json(new ApiResponse(200, ticket, "Fetched ticket"));
 });

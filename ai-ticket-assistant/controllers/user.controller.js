@@ -64,12 +64,12 @@ export const signup = asyncHandler(async (req, res) => {
     if (!createdUser)
         throw new ApiError(500, "Something went wrong while registering user.");
     
-    // inngest.send({
-    //     name: "user/signup",
-    //     data: {
-    //         email,
-    //     },
-    // });
+    inngest.send({
+        name: "user/signup",
+        data: {
+            email,
+        },
+    });
     
     const token = await createdUser.generateJwtToken();
     const options = {
